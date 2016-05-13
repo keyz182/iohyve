@@ -283,6 +283,11 @@ __load() {
 				printf '\(cd0\)\ '$media'\n' >> /iohyve/$name/device.map
 				printf 'linux (cd0)/isolinux/vmlinuz\ninitrd (cd0)/isolinux/initrd.img\nboot\n' > /iohyve/$name/grub.cfg
 				grub-bhyve $wire_memory -m /iohyve/$name/device.map -r host -d /iohyve/$name -c /dev/${con}A -M $ram ioh-$name
+			elif [ $os = "coreos" ]; then
+				printf '\(hd0\)\ /dev/zvol/'$disk'\n' > /iohyve/$name/device.map
+				printf '\(cd0\)\ '$media'\n' >> /iohyve/$name/device.map
+				printf 'linux (cd0)/coreos/vmlinuz\ninitrd (cd0)/coreos/cpio.gz coreos.autologin\nboot\n' > /iohyve/$name/grub.cfg
+				grub-bhyve $wire_memory -m /iohyve/$name/device.map -r host -d /iohyve/$name -c /dev/${con}A -M $ram ioh-$name
 			elif [ $os = "arch" ]; then
 				printf '\(hd0\)\ /dev/zvol/'$disk'\n' > /iohyve/$name/device.map
 				printf '\(cd0\)\ '$media'\n' >> /iohyve/$name/device.map
@@ -329,6 +334,10 @@ __load() {
 				printf '\(cd0\)\ '$media'\n' >> /iohyve/$name/device.map
 				grub-bhyve $wire_memory -m /iohyve/$name/device.map -r hd0,msdos1 -d /grub -c /dev/${con}A -M $ram ioh-$name
 			elif [ $os = "centos7" ]; then
+				printf '\(hd0\)\ /dev/zvol/'$disk'\n' > /iohyve/$name/device.map
+				printf '\(cd0\)\ '$media'\n' >> /iohyve/$name/device.map
+				grub-bhyve $wire_memory -m /iohyve/$name/device.map -r hd0,msdos1 -d /grub2 -c /dev/${con}A -M $ram ioh-$name
+			elif [ $os = "coreos" ]; then
 				printf '\(hd0\)\ /dev/zvol/'$disk'\n' > /iohyve/$name/device.map
 				printf '\(cd0\)\ '$media'\n' >> /iohyve/$name/device.map
 				grub-bhyve $wire_memory -m /iohyve/$name/device.map -r hd0,msdos1 -d /grub2 -c /dev/${con}A -M $ram ioh-$name
